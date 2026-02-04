@@ -8,13 +8,9 @@ import java.util.Scanner;
  * complete a heist and how much money would be left in the pot 
  * after the heist and that would dtermine if the heist was a success or failure
  */
+
 public class App {
-
-    // ---------- Helper Methods (keeps main() clean) ----------
-
-    /**
-     * Reads an int from the user with validation.
-     */
+    /* Reads an int from the user with validation*/
     private static int readInt(Scanner input, String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -29,9 +25,7 @@ public class App {
         }
     }
 
-    /**
-     * Reads a double from the user with validation.
-     */
+    /* Reads a double from the user with validation */
     private static double readDouble(Scanner input, String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -46,9 +40,7 @@ public class App {
         }
     }
 
-    /**
-     * Displays the main menu.
-     */
+    /*Displays the main menu*/
     private static void showMenu(String userName, double remainingBudget) {
         System.out.println();
         System.out.println("--------------------------------------------------");
