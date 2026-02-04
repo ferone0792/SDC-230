@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-/**
+/*
  * 1.5 Project - User Interactions and I/O Week 1
  * Bank Heist Calculator
  * Name: Fernando O'Neil
