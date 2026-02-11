@@ -1,0 +1,283 @@
+import java.util.Random;
+import java.util.Scanner;
+
+/* Fernando ONeil
+ * 02/11/2026
+ * 2.3 Project: Java Arithmetic Project
+ * Heist Budget Calculator with menu and logic */
+public class HeistCalculator {
+
+    // Scanner
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final Random random = new Random();
+
+    //These will display thoughout the whole program
+    private static double money = 0.0;
+    private static int crewCount = 0;
+
+    // These options can only be selected once
+    private static boolean unexpectedCostsApplied = false;
+    private static boolean crewCutCalculated = false;
+
+    public static void main(String[] args) {
+        System.out.println("========================================================="); //Header
+        System.out.println("2.3: Java Arithmetic Project- Fernando O'Neil");
+        System.out.println("==========================================================");
+        System.out.println("Hey scumbag! Nice job with the bank heist! ."); //Welcome message
+        System.out.println("INSTRUCTIONS: Select an option from the menu to manage your heist money and costs!");
+        System.out.println();
+
+        //First inouts that will display the whole time you use the program
+        money = readDoubleMin("1) How much money did you make during your heist? $", 0.0);
+        crewCount = readIntMin("2) How many people are in your crew? ", 0);
+
+        //Loop for main menu
+        boolean running = true;
+        while (running) {
+            printStatus();
+            System.out.println("--- MAIN MENU ---");
+            System.out.println("1. Additional Equipment Purchased");
+            System.out.println("2. Unexpected Costs");
+            System.out.println("3. Additional Money Gained During Heist");
+            System.out.println("4. Cut of Crew");
+            System.out.println("5. Quit");
+
+            int choice = readIntInRange("Choose an option (1-5): ", 1, 5);
+            System.out.println();
+            switch (choice) {
+                case 1:
+                    runEquipmentShop();
+                    break;
+                case 2:
+                    runUnexpectedCosts();
+                    break;
+                case 3:
+                    addLootGained();
+                    break;
+                case 4:
+                    calculateCrewCut();
+                    break;
+                case 5:
+                    running = false;
+                    break;
+            }
+
+            System.out.println();
+        }
+
+        // Exit message
+        System.out.println("Thank you for using this ya sicko! Hope you made some good money on your heist!");
+        System.out.println("==========================================================");
+    }
+
+    //SHows your budget at all times
+    private static void printStatus() {
+        System.out.println("----------------------------------------------------------");
+        System.out.printf("Current Money: $%.2f%n", money);
+        System.out.println("Crew Members: " + crewCount);
+        System.out.println("----------------------------------------------------------");
+    }
+
+    //Inventory shop: Multiply and loops if you need to make more than one purchase
+    private static void runEquipmentShop() {
+        boolean shopping = true;
+        while (shopping) {
+            printStatus();
+            System.out.println("=== EQUIPMENT SHOP ===");
+            System.out.println("Choose items you purchased:");
+            System.out.println("1. Bribe Guards ($1000 each)");
+            System.out.println("2. TNT ($250 each)");
+            System.out.println("3. Wall Climbing Toilet Plungers ($21 each)");
+            System.out.println("4. Drone ($300 each)");
+            System.out.println("5. Banana Peels ($2 each)");
+            System.out.println("6. Gas Masks ($32 each)");
+            System.out.println("7. Phone Jammer ($2000 each)");
+            System.out.println("8. Back to Main Menu");
+            int itemChoice = readIntInRange("Select an item (1-8): ", 1, 8);
+            if (itemChoice == 8) {
+                return; // go back to main menu
+            }
+
+            double price = getItemPrice(itemChoice);
+            String itemName = getItemName(itemChoice);
+            int qty = readIntMin("How many \"" + itemName + "\" did you buy? ", 0);
+            double totalCost = price * qty; //Multiplication
+            if (money - totalCost < 0) { //Doesn't allow you to use negative money
+                System.out.printf("Error! Purchase total $%.2f would make money negative. You suck at heists! You might want to restart the program loser!.%n", totalCost);
+            } else {
+                money -= totalCost;
+                System.out.printf("Purchased %d %s for $%.2f total.%n", qty, itemName, totalCost);
+                System.out.printf("Updated Money: $%.2f%n", money);
+            }
+
+            int again = readIntInRange("Did you purchase other items? (1=Yes, 2=No): ", 1, 2);
+            shopping = (again == 1);
+            System.out.println();
+        }
+    }
+
+    private static double getItemPrice(int itemChoice) {
+        switch (itemChoice) {
+            case 1: return 1000.0;
+            case 2: return 250.0;
+            case 3: return 21.0;
+            case 4: return 300.0;
+            case 5: return 2.0;
+            case 6: return 32.0;
+            case 7: return 2000.0;
+            default: return 0.0;
+        }
+    }
+
+    private static String getItemName(int itemChoice) {
+        switch (itemChoice) {
+            case 1: return "Bribe Guards";
+            case 2: return "TNT";
+            case 3: return "Wall Climbing Toilet Plungers";
+            case 4: return "Drone";
+            case 5: return "Banana Peels";
+            case 6: return "Gas Masks";
+            case 7: return "Phone Jammer";
+            default: return "Unknown Item";
+        }
+    }
+
+    private static void runUnexpectedCosts() { //Subrtraction and can only be selected once
+
+        if (unexpectedCostsApplied) {
+            System.out.println("You already applied the unexpected costs... you want to be in the bottom of a river?.");
+            return;
+        }
+
+        printStatus();
+        System.out.println("=== Unexpected costs ===");
+        System.out.println("All unexpected cost categories are applied ONCE and subtracted from your money.");
+        System.out.println();
+        double vaultDrillRepairs = randomIntInRange(1000, 3500); // Random costs inside a certain range for the items
+        double vehicleDamage = randomIntInRange(250, 1800);
+        double disguises = randomIntInRange(12, 70);
+        double bankMap = 800.0;     // fixed
+        double cctvHack = 700.0;    // fixed
+        double sleepingGas = randomIntInRange(50, 500);
+        // Print each the categories and their costs
+        System.out.printf("1) Vault drill repairs: $%.2f%n", vaultDrillRepairs);
+        System.out.printf("2) Vehicle damage:      $%.2f%n", vehicleDamage);
+        System.out.printf("3) Disguises:           $%.2f%n", disguises);
+        System.out.printf("4) Bank map:            $%.2f%n", bankMap);
+        System.out.printf("5) CCTV hack:           $%.2f%n", cctvHack);
+        System.out.printf("6) Sleeping gas:        $%.2f%n", sleepingGas);
+        double totalUnexpected = vaultDrillRepairs + vehicleDamage + disguises + bankMap + cctvHack + sleepingGas;
+        System.out.println("----------------------------------------------------------");
+        System.out.printf("Total unexpected costs: $%.2f%n", totalUnexpected);
+        if (money - totalUnexpected < 0) { //No subtraction result to be negative
+            System.out.println("Total can't be negative. How did the cops not catch you??? Costs wont be applied.");
+            return;
+        }
+
+        money -= totalUnexpected; //Apply costs and subtracts to the the budget
+        unexpectedCostsApplied = true;
+        System.out.printf("Updated Money: $%.2f%n", money);
+    }
+
+    //Add loot gained that wasn't expected like purses, wallets, or jewlery, and watches etc
+    private static void addLootGained() {
+        printStatus();
+        System.out.println("=== Additional money===");
+        System.out.println("Any extra money you gained from heist! (purses, wallets, jewelry, watches, etc) can be added here.");
+        double extra = readDoubleMin("How much extra money did you gain during the heist? $", 0.0);
+        money += extra;
+        System.out.printf("Added $%.2f to your money.%n", extra);
+        System.out.printf("Updated Money: $%.2f%n", money);
+    }
+
+    //Divides crew cut and can pnly be done once
+    private static void calculateCrewCut() {
+        if (crewCutCalculated) {
+            System.out.println("Crew cut already calculated. You can only do this once per heist.");
+            return;
+        }
+
+        int ready = readIntInRange("Have you calculated all costs and loot gained? (1=Yes, 2=No): ", 1, 2);
+        if (ready == 2) {
+            System.out.println("Okay. Go back and finish costs/loot first.");
+            return;
+        }
+
+        printStatus();
+        System.out.println("=== Cut for crew===");
+        if (crewCount == 0) {
+            System.out.println("You have 0 crew members (solo heist). You keep the full amount!");
+            System.out.printf("Your cut: $%.2f%n", money);
+            crewCutCalculated = true;
+            return;
+        }
+
+        double eachCut = money / crewCount; // Division
+        if (eachCut < 1.0) {
+            System.out.println("ERROR!!! Division result cannot be less than 1. Crew cut not calculated.");
+            return;
+        }
+
+        System.out.printf("Total money: $%.2f%n", money);
+        System.out.println("Crew members: " + crewCount);
+        System.out.printf("Each crew member gets: $%.2f%n", eachCut);
+        crewCutCalculated = true;
+    }
+
+    //Helper methods for input valifdation and random numer generation
+    private static int randomIntInRange(int min, int max) {
+        // inclusive range
+        return random.nextInt((max - min) + 1) + min;
+    }
+
+    private static int readIntInRange(String prompt, int min, int max) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            try {
+                int value = Integer.parseInt(input);
+                if (value < min || value > max) {
+                    System.out.println("ERROR!!! Enter a number between " + min + " and " + max + ".");
+                } else {
+                    return value;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("ERROR!!! Please enter a valid whole number.");
+            }
+        }
+    }
+
+    private static int readIntMin(String prompt, int min) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            try {
+                int value = Integer.parseInt(input);
+                if (value < min) {
+                    System.out.println("ERROR!!! Enter a number greater than or equal to " + min + ".");
+                } else {
+                    return value;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("ERROR!!!Please enter a valid whole number.");
+            }
+        }
+    }
+
+    private static double readDoubleMin(String prompt, double min) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            try {
+                double value = Double.parseDouble(input);
+                if (value < min) {
+                    System.out.printf("ERROR!!! Enter a number greater than or equal to %.2f.%n", min);
+                } else {
+                    return value;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("ERROR!!! Please enter a valid number (example: 1500 or 1500.50).");
+            }
+        }
+    }
+}
