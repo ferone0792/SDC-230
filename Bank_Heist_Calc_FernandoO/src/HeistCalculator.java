@@ -2,8 +2,9 @@ import java.util.Random;
 import java.util.Scanner;
 
 /* Fernando ONeil
- * 02/11/2026
- * 2.3 Project: Java Arithmetic Project
+ * 02/21/2026
+ * Week 3: Postfix Integration (Stacks)
+ * 3.3 Project: Java Arithmetic Project
  * Heist Budget Calculator with menu and logic */
 public class HeistCalculator {
 
@@ -21,7 +22,7 @@ public class HeistCalculator {
 
     public static void main(String[] args) {
         System.out.println("========================================================="); //Header
-        System.out.println("2.3: Java Arithmetic Project- Fernando O'Neil");
+        System.out.println("3.3: Java Arithmetic Project- Fernando O'Neil");
         System.out.println("==========================================================");
         System.out.println("Hey scumbag! Nice job with the bank heist! ."); //Welcome message
         System.out.println("INSTRUCTIONS: Select an option from the menu to manage your heist money and costs!");
@@ -40,24 +41,29 @@ public class HeistCalculator {
             System.out.println("2. Unexpected Costs");
             System.out.println("3. Additional Money Gained During Heist");
             System.out.println("4. Cut of Crew");
-            System.out.println("5. Quit");
+            System.out.println("5. FBI Scrambler"); //Postfix Evaluator and stacks
+            System.out.println("6. Quit");
 
-            int choice = readIntInRange("Choose an option (1-5): ", 1, 5);
+            int choice = readIntInRange("Choose an option (1-6): ", 1, 6);
             System.out.println();
+
             switch (choice) {
                 case 1:
-                    runEquipmentShop();
+                    runEquipmentShop(); //multiplication
                     break;
                 case 2:
-                    runUnexpectedCosts();
+                    runUnexpectedCosts(); //subtraction
                     break;
                 case 3:
-                    addLootGained();
+                    addLootGained(); //addition
                     break;
                 case 4:
-                    calculateCrewCut();
+                    calculateCrewCut(); //Division
                     break;
                 case 5:
+                    runFbiScrambler(); // Week 3 postfix evaluator
+                    break;
+                case 6: //exit
                     running = false;
                     break;
             }
@@ -78,9 +84,10 @@ public class HeistCalculator {
         System.out.println("----------------------------------------------------------");
     }
 
-    //Inventory shop: Multiply and loops if you need to make more than one purchase
+    //Inventory shop which multiplies and loops if you need to make more than one purchase
     private static void runEquipmentShop() {
         boolean shopping = true;
+
         while (shopping) {
             printStatus();
             System.out.println("=== EQUIPMENT SHOP ===");
@@ -93,17 +100,20 @@ public class HeistCalculator {
             System.out.println("6. Gas Masks ($32 each)");
             System.out.println("7. Phone Jammer ($2000 each)");
             System.out.println("8. Back to Main Menu");
+
             int itemChoice = readIntInRange("Select an item (1-8): ", 1, 8);
             if (itemChoice == 8) {
-                return; // go back to main menu
+                return; // back to main menu
             }
 
             double price = getItemPrice(itemChoice);
             String itemName = getItemName(itemChoice);
+
             int qty = readIntMin("How many \"" + itemName + "\" did you buy? ", 0);
-            double totalCost = price * qty; //Multiplication
-            if (money - totalCost < 0) { //Doesn't allow you to use negative money
-                System.out.printf("Error! Purchase total $%.2f would make money negative. You suck at heists! You might want to restart the program loser!.%n", totalCost);
+            double totalCost = price * qty;
+
+            if (money - totalCost < 0) { //You can't go into the negatives
+                System.out.printf("Error! Purchase total $%.2f would make money negative. You suck at heists!%n", totalCost);
             } else {
                 money -= totalCost;
                 System.out.printf("Purchased %d %s for $%.2f total.%n", qty, itemName, totalCost);
@@ -142,10 +152,11 @@ public class HeistCalculator {
         }
     }
 
-    private static void runUnexpectedCosts() { //Subrtraction and can only be selected once
+    // Subtraction and  division can only be selected once
+    private static void runUnexpectedCosts() {
 
         if (unexpectedCostsApplied) {
-            System.out.println("You already applied the unexpected costs... you want to be in the bottom of a river?.");
+            System.out.println("You already applied the unexpected costs... you want to be in the bottom of a river?");
             return;
         }
 
@@ -153,44 +164,50 @@ public class HeistCalculator {
         System.out.println("=== Unexpected costs ===");
         System.out.println("All unexpected cost categories are applied ONCE and subtracted from your money.");
         System.out.println();
-        double vaultDrillRepairs = randomIntInRange(1000, 3500); // Random costs inside a certain range for the items
+
+        double vaultDrillRepairs = randomIntInRange(1000, 3500);
         double vehicleDamage = randomIntInRange(250, 1800);
         double disguises = randomIntInRange(12, 70);
-        double bankMap = 800.0;     // fixed
-        double cctvHack = 700.0;    // fixed
+        double bankMap = 800.0;
+        double cctvHack = 700.0;
         double sleepingGas = randomIntInRange(50, 500);
-        // Print each the categories and their costs
+
         System.out.printf("1) Vault drill repairs: $%.2f%n", vaultDrillRepairs);
         System.out.printf("2) Vehicle damage:      $%.2f%n", vehicleDamage);
         System.out.printf("3) Disguises:           $%.2f%n", disguises);
         System.out.printf("4) Bank map:            $%.2f%n", bankMap);
         System.out.printf("5) CCTV hack:           $%.2f%n", cctvHack);
         System.out.printf("6) Sleeping gas:        $%.2f%n", sleepingGas);
+
         double totalUnexpected = vaultDrillRepairs + vehicleDamage + disguises + bankMap + cctvHack + sleepingGas;
+
         System.out.println("----------------------------------------------------------");
         System.out.printf("Total unexpected costs: $%.2f%n", totalUnexpected);
-        if (money - totalUnexpected < 0) { //No subtraction result to be negative
-            System.out.println("Total can't be negative. How did the cops not catch you??? Costs wont be applied.");
+
+        if (money - totalUnexpected < 0) {
+            System.out.println("Total can't be negative. How did the cops not catch you??? Costs won't be applied.");
             return;
         }
 
-        money -= totalUnexpected; //Apply costs and subtracts to the the budget
+        money -= totalUnexpected;
         unexpectedCostsApplied = true;
         System.out.printf("Updated Money: $%.2f%n", money);
     }
 
-    //Add loot gained that wasn't expected like purses, wallets, or jewlery, and watches etc
+    // Add loot gained that wasn't expected
     private static void addLootGained() {
         printStatus();
-        System.out.println("=== Additional money===");
+        System.out.println("=== Additional money ===");
         System.out.println("Any extra money you gained from heist! (purses, wallets, jewelry, watches, etc) can be added here.");
+
         double extra = readDoubleMin("How much extra money did you gain during the heist? $", 0.0);
         money += extra;
+
         System.out.printf("Added $%.2f to your money.%n", extra);
         System.out.printf("Updated Money: $%.2f%n", money);
     }
 
-    //Divides crew cut and can pnly be done once
+    // Divides crew cut and can only be done once
     private static void calculateCrewCut() {
         if (crewCutCalculated) {
             System.out.println("Crew cut already calculated. You can only do this once per heist.");
@@ -204,7 +221,8 @@ public class HeistCalculator {
         }
 
         printStatus();
-        System.out.println("=== Cut for crew===");
+        System.out.println("=== Cut for crew ===");
+
         if (crewCount == 0) {
             System.out.println("You have 0 crew members (solo heist). You keep the full amount!");
             System.out.printf("Your cut: $%.2f%n", money);
@@ -212,7 +230,8 @@ public class HeistCalculator {
             return;
         }
 
-        double eachCut = money / crewCount; // Division
+        double eachCut = money / crewCount;
+
         if (eachCut < 1.0) {
             System.out.println("ERROR!!! Division result cannot be less than 1. Crew cut not calculated.");
             return;
@@ -221,10 +240,90 @@ public class HeistCalculator {
         System.out.printf("Total money: $%.2f%n", money);
         System.out.println("Crew members: " + crewCount);
         System.out.printf("Each crew member gets: $%.2f%n", eachCut);
+
         crewCutCalculated = true;
     }
 
-    //Helper methods for input valifdation and random numer generation
+    //Week 3 FBI Scrambler which is postfix evaluator and stacks
+    private static void runFbiScrambler() {
+
+        System.out.println("WARNING! FBI CLOSING IN ON YOUR POSITION!!!!");
+        System.out.println("SCRAMBLE THEIR SYSTEMS BY USING OUR STACK METHOD!");
+        System.out.println("FINAL RESULT MUST BE DIVISIBLE BY 12.");
+        System.out.println("You have 3 chances.");
+        System.out.println("Example postfix: 24 12 + 120 *");
+        System.out.println();
+
+        int attemptsLeft = 3;
+
+        while (attemptsLeft > 0) {
+
+            if (attemptsLeft == 2) { //warning 1
+                System.out.println("Don't worry, they'll know you just wet your bed until you were 16 and have you within a 25 mile radius.");
+            } else if (attemptsLeft == 1) {
+                System.out.println("Last chance sucka!");
+            }
+
+            System.out.print("Postfix: ");
+            String expression = scanner.nextLine().trim();
+
+            try {
+                double result = PostfixEvaluator.evaluatePostfix(expression);
+                System.out.printf("Final Result: %.2f%n", result);
+
+                if (isDivisibleBy12(result)) { //If you succeeed against the scrambler
+                    System.out.println("Good job, the FBI accidentally went to the wrong address and arrested a granny!");
+                    return;
+                } else {
+                    attemptsLeft--;
+
+                    if (attemptsLeft == 0) break;
+
+                    if (attemptsLeft == 2) {
+                        int again = readIntInRange("Try again? 1 = YES, 2 = NO, I'M ESCAPING: ", 1, 2);
+                        if (again == 2) {
+                            System.out.println("Okay, you're escaping.");
+                            return;
+                        }
+                    } else if (attemptsLeft == 1) { //warning 3
+                        System.out.println("Oh no you only have 1 more chance, and they have you within a 10 mile radius!");
+                    }
+                }
+
+            } catch (IllegalArgumentException e) {
+                attemptsLeft--;
+                System.out.println("Error: " + e.getMessage());
+
+                if (attemptsLeft == 0) break;
+
+                if (attemptsLeft == 2) { //warning 1
+                    System.out.println("Don't worry, they'll know you just wet your bed until you were 16 and have you within a 25 mile radius.");
+                    int again = readIntInRange("Try again? 1 = YES, 2 = NO, I'M ESCAPING: ", 1, 2);
+                    if (again == 2) {
+                        System.out.println("Okay, you're escaping.");
+                        return;
+                    }
+                } else if (attemptsLeft == 1) {
+                    System.out.println("Oh no you only have 1 more chance, and they have you within a 10 mile radius!");
+                }
+            }
+
+            System.out.println();
+        }
+
+        System.out.println("Yeah they have your location and social security number... sucks to suck!!!");
+        System.out.println("Now hit this computer with a hammer and try to run");
+    }
+
+    private static boolean isDivisibleBy12(double value) {
+        double nearestInt = Math.rint(value); // nearest integer
+        if (Math.abs(value - nearestInt) > 1e-9) {
+            return false; // must be basically an integer
+        }
+        long asLong = (long) nearestInt;
+        return asLong % 12 == 0;
+    }
+
     private static int randomIntInRange(int min, int max) {
         // inclusive range
         return random.nextInt((max - min) + 1) + min;
@@ -259,7 +358,7 @@ public class HeistCalculator {
                     return value;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("ERROR!!!Please enter a valid whole number.");
+                System.out.println("ERROR!!! Please enter a valid whole number.");
             }
         }
     }
