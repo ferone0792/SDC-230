@@ -1,11 +1,11 @@
-import java.util.Scanner;
-import java.util.Random;
-
 /*Fernando ONeil
  * Week 4 Project
  *02/23/2026
  * HeistCalculator.java
  * -Main menu class and calls correct option depending the user's Choice*/
+
+import java.util.Scanner;
+import java.util.Random;
 public class HeistCalculator {
 
     public static void main(String[] args) {

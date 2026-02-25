@@ -103,7 +103,7 @@ public class Option6InsideManLoyalty {
                 score = evaluator.evaluatePostfix(postfix);
 
                 //Prints score
-                System.out.printf("Loyalty Score for %s: %.2f%n", suspectName, score);
+                System.out.printf("Loyalty Score for %s: %.2f%n out of 50", suspectName, score);
 
             } catch (IllegalArgumentException | ArithmeticException | EmptyStackException e) {
                 System.out.println("Error: " + e.getMessage()); //Error message and no crash
