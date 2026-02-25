@@ -83,10 +83,6 @@ public class Option6InsideManLoyalty {
             System.out.println("Suggested loyalty formula:");
             System.out.println("( stress * 5 ) + ( payment offered * 4 ) - ( police pressure * 3 ) - ( greeed * 4 ) - ( trust * 2 )");
             System.out.println();
-            System.out.println("Your values to plug in:");
-            System.out.println("payment=" + payment + " trust=" + trust + " stress=" + stress
-                    + " police=" + policePressure + " greed=" + greed);
-            System.out.println();
 
             // Ask for infix expression
             System.out.print("Enter your INFIX loyalty expression: ");
