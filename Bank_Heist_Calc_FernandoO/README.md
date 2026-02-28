@@ -1,18 +1,22 @@
-## Getting Started
+# Heist Calculator
+## Project Description
+The Heist Calculator is a Java console application created for the SDC230 Programming Java final project. This program shows the use of loops, conditionals, user input, and basic object-oriented structure in a single menu-driven application. The calculator combines multiple features developed throughout the course into one complete working program.
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+The application allows users to select different calculation options from a menu. It uses counter-controlled loops and condition-based loops to perform calculations and keep running totals. The program accepts user input using the Scanner class and processes values based on the user’s selection. It also includes logic for tracking totals, counting entries, and evaluating postfix expressions.
 
-## Folder Structure
+This project demonstrates understanding of:
+1. For loops
+2. While loops
+3. If/else statements
+4. Methods and modular design
+5. Running totals (accumulator pattern)
+6. User input handling
+7. Basic Java syntax and structure
 
-The workspace contains two folders by default, where:
+To run the program, open the project in Visual Studio Code and Github
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+This project was done over several weeks, using instructor feedback to improve logic, formatting, and organization.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Fernando ONeil
+SDC230 Programming Java
+ECPI University
